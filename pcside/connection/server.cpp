@@ -3,6 +3,7 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+
 void server_run(int port)
 {
 	sockaddr_in addr{};
@@ -15,7 +16,7 @@ void server_run(int port)
 		perror("server socket");
 		return;
 	}
-	std::cout << "socket good\n";
+	std::cout << "socket success\n";
 
 	if (bind(server_socket, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
 		perror("bind");
@@ -23,7 +24,7 @@ void server_run(int port)
 		return;
 	}
 
-	std::cout << "bind good\n";
+	std::cout << "bind success\n";
 
 	if (listen(server_socket, 1) < 0) {
 		perror("listen");
@@ -31,7 +32,7 @@ void server_run(int port)
 		return;
 	}
 
-	std::cout << "listen good";
+	std::cout << "listen success";
 
 	while(true) {
 		int client = accept(server_socket, nullptr, nullptr);
