@@ -1,8 +1,11 @@
-
 // Весь этот код был написан нейросетью. Я его заменю как только разберусь как он работает
+
 package com.appy.messager
 
+import java.net.Socket
 import java.net.InetSocketAddress
+import java.io.InputStream
+import java.io.OutputStream
 
 class TcpClient {
     private var socket: Socket? = null
@@ -21,7 +24,7 @@ class TcpClient {
                 inputStream = socket?.getInputStream()
 
                 // Начать прослушивание входящих сообщений
-                startReceiving()
+                //startReceiving()
             }.start()
         } catch (e: Exception) {
             e.printStackTrace()
@@ -37,7 +40,7 @@ class TcpClient {
         }
     }
 
-    private fun startReceiving() {
+    /*private fun startReceiving() {
         Thread {
             val buffer = ByteArray(1024)
             var bytes: Int
@@ -52,7 +55,7 @@ class TcpClient {
                 e.printStackTrace()
             }
         }.start()
-    }
+    }*/
 
     fun disconnect() {
         try {
