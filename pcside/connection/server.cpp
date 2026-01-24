@@ -32,7 +32,7 @@ void server_run(int port)
 		return;
 	}
 
-	std::cout << "listen success";
+	std::cout << "listen success\n";
 
 	while(true) {
 		int client = accept(server_socket, nullptr, nullptr);

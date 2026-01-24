@@ -1,63 +1,36 @@
-// Весь этот код был написан нейросетью. Я его заменю как только разберусь как он работает
-
-package com.appy.messager
-
+import kotlinx.coroutines.*
 import java.net.Socket
-import java.net.InetSocketAddress
-import java.io.InputStream
 import java.io.OutputStream
 
 class TcpClient {
     private var socket: Socket? = null
     private var outputStream: OutputStream? = null
-    private var inputStream: InputStream? = null
 
-    fun connect(serverIp: String, port: Int) {
-        try {
-            // Работа с сетью должна быть в отдельном потоке
-            Thread {
-                socket = Socket()
-                // Таймаут подключения
-                socket?.connect(InetSocketAddress(serverIp, port), 5000)
-
-                outputStream = socket?.getOutputStream()
-                inputStream = socket?.getInputStream()
-
-                // Начать прослушивание входящих сообщений
-                //startReceiving()
-            }.start()
+    suspend fun connect(host: String, port: Int): Boolean = withContext(Dispatchers.IO) {
+        return@withContext try {
+            socket = Socket(host, port)
+            outputStream = socket?.getOutputStream()
+            println("Connect")
+            true
         } catch (e: Exception) {
-            e.printStackTrace()
+            println("Does not connect")
+            false
         }
     }
 
-    fun sendMessage(message: String) {
-        try {
+    suspend fun sendMessage(message: String): Boolean = withContext(Dispatchers.IO) {
+        return@withContext try {
             outputStream?.write(message.toByteArray())
             outputStream?.flush()
+            println("Message send")
+            true
         } catch (e: Exception) {
-            e.printStackTrace()
+            println("Does not message send")
+            false
         }
     }
 
-    /*private fun startReceiving() {
-        Thread {
-            val buffer = ByteArray(1024)
-            var bytes: Int
-
-            try {
-                while (inputStream?.read(buffer).also { bytes = it ?: -1 } != -1) {
-                    val message = String(buffer, 0, bytes)
-                    // Обработать полученное сообщение
-                    handleMessage(message)
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }.start()
-    }*/
-
-    fun disconnect() {
+    suspend fun disconnect() = withContext(Dispatchers.IO) {
         try {
             socket?.close()
         } catch (e: Exception) {
