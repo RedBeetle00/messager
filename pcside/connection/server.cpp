@@ -3,9 +3,20 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <csignal>
+
+volatile sig_atomic_t flag = 0;
+
+void signal_handler(int signum)
+{
+	std::cout << "Signal int" << std::endl;
+	flag = 1;
+}
 
 void server_run(int port)
 {
+	signal(SIGINT, signal_handler);
+
 	sockaddr_in addr{};
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(port);
@@ -34,7 +45,7 @@ void server_run(int port)
 
 	std::cout << "listen success\n";
 
-	while(true) {
+	while(1) {
 		int client = accept(server_socket, nullptr, nullptr);
 		if (client < 0) {
 			perror("accept");
