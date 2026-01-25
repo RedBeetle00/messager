@@ -15,7 +15,7 @@ void signal_handler(int signum)
 
 void server_run(int port)
 {
-	signal(SIGINT, signal_handler);
+	//signal(SIGINT, signal_handler);
 
 	sockaddr_in addr{};
 	addr.sin_family = AF_INET;
@@ -45,21 +45,23 @@ void server_run(int port)
 
 	std::cout << "listen success\n";
 
+	int client = accept(server_socket, nullptr, nullptr);
+	if (client < 0) {
+		perror("accept");
+		}
 	while(1) {
-		int client = accept(server_socket, nullptr, nullptr);
-		if (client < 0) {
-			perror("accept");
-			continue;
+		char buffer[1024];
+		ssize_t bytes_received = recv(client, buffer, sizeof(buffer) - 1, 0);
+		if (bytes_received > 0) {
+			buffer[bytes_received] = '\0';
+			std::cout << "[SERVER] " << buffer << std::endl;
 		}
-		uint32_t len;
-		if (recv(client, &len, sizeof(len), MSG_WAITALL) <= 0) {
-			close(client);
-			continue;
+		else if (bytes_received == 0) {
+			std::cout << "Client disconnected\n";
+			break;
 		}
-		len = ntohl(len);
-		std::string msg(len, '\0');
-		if (recv(client, msg.data(), len, MSG_WAITALL) > 0)
-			std::cout << "[SERVER] " << msg << std::endl;
-		close(client);
+		else
+			perror("recv");
 	}
+	close(client);	
 }

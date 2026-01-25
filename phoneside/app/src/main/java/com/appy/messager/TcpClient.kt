@@ -1,3 +1,5 @@
+package com.appy.messager
+
 import kotlinx.coroutines.*
 import java.net.Socket
 import java.io.OutputStream

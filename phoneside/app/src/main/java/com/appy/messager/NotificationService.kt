@@ -1,3 +1,5 @@
+package com.appy.messager
+
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.app.Notification
