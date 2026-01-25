@@ -25,7 +25,7 @@ class NotificationService : NotificationListenerService() {
             val subText = notification.extras.getString(Notification.EXTRA_SUB_TEXT)
 
             // Отправляем данные на ПК
-            tcpClient.sendMessage(text.toString())
+            tcpClient.sendMessage("$title:\n$text\n")
 
             tcpClient.disconnect()
         }
