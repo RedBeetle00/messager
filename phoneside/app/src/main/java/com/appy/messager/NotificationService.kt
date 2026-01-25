@@ -8,6 +8,7 @@ import kotlinx.coroutines.launch
 
 class NotificationService : NotificationListenerService() {
     private lateinit var tcpClient: TcpClient
+
     private val scope = CoroutineScope(Dispatchers.Main + Job())
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         tcpClient = TcpClient()

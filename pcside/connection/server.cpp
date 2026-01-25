@@ -43,7 +43,7 @@ void server_run(int port)
 		return;
 	}
 
-	std::cout << "listen success\n";
+	std::cout << "listen success\n\n";
 
 	while(1) {
 		int client = accept(server_socket, nullptr, nullptr);
@@ -56,12 +56,8 @@ void server_run(int port)
 			buffer[bytes_received] = '\0';
 			std::cout << buffer << std::endl;
 		}
-		//else if (bytes_received == 0) {
-		//	std::cout << "Client disconnected\n";
-		//	break;
-		//}
 		else
 			perror("recv");
-		close(client);	
+		close(client);
 	}
 }
