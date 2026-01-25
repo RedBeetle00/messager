@@ -24,7 +24,7 @@ class TcpClient {
         return@withContext try {
             outputStream?.write(message.toByteArray())
             outputStream?.flush()
-            println("Message send")
+            println("Message send $message")
             true
         } catch (e: Exception) {
             println("Message does not send")
