@@ -6,14 +6,15 @@
     android:visibility="visible">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/startButton"
         android:layout_width="match_parent"
-        android:layout_height="345dp"
-        android:text="Button" />
+        android:layout_height="350dp"
+        android:text="Start" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/stopButton"
         android:layout_width="match_parent"
-        android:layout_height="324dp"
-        android:text="Button" />
+        android:layout_height="350dp"
+        android:text="Stop" />
+
 </LinearLayout>

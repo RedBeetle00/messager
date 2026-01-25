@@ -27,7 +27,7 @@ class TcpClient {
             println("Message send")
             true
         } catch (e: Exception) {
-            println("Does not message send")
+            println("Message does not send")
             false
         }
     }

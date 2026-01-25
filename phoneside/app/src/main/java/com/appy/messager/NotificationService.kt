@@ -3,11 +3,17 @@ package com.appy.messager
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.app.Notification
+import android.util.Log
 import kotlinx.coroutines.*
 import kotlinx.coroutines.launch
 
 class NotificationService : NotificationListenerService() {
     private lateinit var tcpClient: TcpClient
+
+    override fun onListenerConnected() {
+        // Вызывается, когда служба успешно подключена к системе
+        Log.d("NotificationListener", "Service connected")
+    }
 
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         tcpClient = TcpClient()
@@ -22,9 +28,11 @@ class NotificationService : NotificationListenerService() {
         val text = notification.extras.getString(Notification.EXTRA_TEXT)
         val subText = notification.extras.getString(Notification.EXTRA_SUB_TEXT)
 
+        println("Message must be sented")
+
         scope.launch {
             // Отправляем данные на ПК
-            tcpClient.sendMessage(message = text.toString())
+            tcpClient.sendMessage(text.toString())
         }
     }
 }
