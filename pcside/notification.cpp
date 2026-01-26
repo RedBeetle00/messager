@@ -1,5 +1,4 @@
 #include <libnotify/notify.h>
-#include <string>
 #include "notification.h"
 
 void show_notify(char* text)
