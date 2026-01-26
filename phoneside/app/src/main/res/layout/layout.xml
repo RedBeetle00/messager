@@ -5,16 +5,9 @@
     android:orientation="vertical"
     android:visibility="visible">
 
-    <Button
-        android:id="@+id/startButton"
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:text="Start" />
-
-    <Button
-        android:id="@+id/stopButton"
-        android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:text="Stop" />
-
+        android:layout_height="match_parent"
+        android:text="Messager" />
 </LinearLayout>

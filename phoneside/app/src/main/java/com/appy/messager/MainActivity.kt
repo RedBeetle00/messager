@@ -20,17 +20,6 @@ class MainActivity : ComponentActivity() {
             val intent = Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
             startActivity(intent)
         }
-
-//        val startButt = findViewById<Button>(R.id.startButton)
-//        startButt.setOnClickListener {
-//            isOn = true
-//            println("Start button, $notificationService.isOff")
-//        }
-//        val stopButt = findViewById<Button>(R.id.stopButton)
-//        stopButt.setOnClickListener {
-//            isOn = false
-//            println("Stop button, $notificationService.isOff")
-//        }
     }
 }
 

@@ -1,22 +1,13 @@
 #include "server.h"
+#include "notification.h"
 #include <iostream>
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <csignal>
 
-volatile sig_atomic_t flag = 0;
-
-void signal_handler(int signum)
-{
-	std::cout << "Signal int" << std::endl;
-	flag = 1;
-}
-
 void server_run(int port)
 {
-	//signal(SIGINT, signal_handler);
-
 	sockaddr_in addr{};
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(port);
@@ -55,6 +46,7 @@ void server_run(int port)
 		if (bytes_received > 0) {
 			buffer[bytes_received] = '\0';
 			std::cout << buffer << std::endl;
+			show_notify(buffer);
 		}
 		else
 			perror("recv");
