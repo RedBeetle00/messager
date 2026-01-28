@@ -26,7 +26,9 @@ void server_run(int port)
 		perror("server socket");
 		return;
 	}
-	//std::cout << "socket success\n";
+
+	int opt = 1;
+	setsockopt(server_socket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
 
 	if (bind(server_socket, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
 		perror("bind");
@@ -34,15 +36,11 @@ void server_run(int port)
 		return;
 	}
 
-	//std::cout << "bind success\n";
-
-	if (listen(server_socket, 1) < 0) {
+	if (listen(server_socket, SOMAXCONN) < 0) {
 		perror("listen");
 		close(server_socket);
 		return;
 	}
-
-	//std::cout << "listen success\n\n";
 	
 	std::cout << "Start on port " << port << std::endl;
 
@@ -50,16 +48,26 @@ void server_run(int port)
 		int client = accept(server_socket, nullptr, nullptr);
 		if (client < 0) {
 			perror("accept");
+			continue;
 		}
-		char buffer[1024];
-		ssize_t bytes_received = recv(client, buffer, sizeof(buffer) - 1, 0);
-		if (bytes_received > 0) {
-			buffer[bytes_received] = '\0';
-			std::cout << buffer << std::endl;
-			show_notify(buffer);
+		std::cout << "User connect\n";
+		while(1) {
+			char buffer[1024];
+			ssize_t bytes_received = recv(client, buffer, sizeof(buffer) - 1, 0);
+			if (bytes_received > 0) {
+				buffer[bytes_received] = '\0';
+				std::cout << buffer << std::endl;
+				show_notify(buffer);
+			}
+			else if (bytes_received == 0) {
+				std::cout << "User disconnect\n";
+				break;
+			}
+			else {
+				perror("recv");
+				break;
+			}
 		}
-		else
-			perror("recv");
 		close(client);
 	}
 }

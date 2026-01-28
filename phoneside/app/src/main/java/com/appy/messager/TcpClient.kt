@@ -8,35 +8,42 @@ class TcpClient {
     private var socket: Socket? = null
     private var outputStream: OutputStream? = null
 
+    // Подключение к серверу
     suspend fun connect(host: String, port: Int): Boolean = withContext(Dispatchers.IO) {
-        return@withContext try {
-            socket = Socket(host, port)
-            outputStream = socket?.getOutputStream()
-            println("Connect")
+        try {
+            socket = Socket(host, port).apply {
+                soTimeout = 5000
+            }
+            outputStream = socket!!.getOutputStream()
             true
-        } catch (e: Exception) {
-            println("Does not connect")
+        } catch (_: Exception) {
+            socket = null
+            outputStream = null
             false
         }
     }
 
+    // Отправка уведомления
     suspend fun sendMessage(message: String): Boolean = withContext(Dispatchers.IO) {
-        return@withContext try {
-            outputStream?.write(message.toByteArray())
-            outputStream?.flush()
+        try {
+            val out = outputStream ?: return@withContext false
+            out.write(message.toByteArray())
+            out.flush()
             println("Message send $message")
             true
-        } catch (e: Exception) {
-            println("Message does not send")
+        } catch (_: Exception) {
             false
         }
     }
 
+    // Отключение от сервера
     suspend fun disconnect() = withContext(Dispatchers.IO) {
         try {
+            outputStream?.close()
             socket?.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
+        } finally {
+            outputStream = null
+            socket = null
         }
     }
 }

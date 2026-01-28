@@ -48,7 +48,7 @@
         android:text="@string/_8080" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btnToggleService"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#222222"

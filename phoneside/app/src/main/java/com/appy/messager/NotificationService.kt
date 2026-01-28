@@ -7,44 +7,70 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.launch
 
 class NotificationService : NotificationListenerService() {
+
+
     private lateinit var tcpClient: TcpClient
     private val serviceJob = Job()
-    private val scope = CoroutineScope(Dispatchers.Main + serviceJob)
+    private val scope = CoroutineScope(Dispatchers.IO + serviceJob)
 
-    // Список системных пакетов для игнорирования
-    val systemPackages = listOf(
-        // "android",      // Системные уведомления Android
-        "com.android.systemui", // Панель уведомлений
-        // "com.android.settings", // Настройки
-        // "com.google.android.apps.messaging" // Если хотите исключить конкретное приложение
+    // Список пакетов для игнорирования
+    private val systemPackages = setOf(
+        "android",
+        "com.android.systemui"
     )
 
-    override fun onNotificationPosted(sbn: StatusBarNotification) {
+    override fun onCreate() {
+        super.onCreate()
         tcpClient = TcpClient()
+    }
+
+    companion object {
+        @Volatile
+        var enabled = false
+    }
+
+    override fun onListenerConnected() {
+        enabled = true
+        scope.launch {
+            tcpClient.connect("192.168.1.11", 8080)
+        }
+    }
+
+    override fun onListenerDisconnected() {
+        enabled = false
+        scope.launch {
+            tcpClient.disconnect()
+        }
+    }
+
+    // Как только приходит уведомление
+    override fun onNotificationPosted(sbn: StatusBarNotification) {
         if (systemPackages.contains(sbn.packageName)) {
             return // Пропускаем системные уведомления
         }
-
         scope.launch {
             // Получаем уведомление
             val notification = sbn.notification
 
             // Извлекаем данные
-            val title = notification.extras.getString(Notification.EXTRA_TITLE)
-            val text = notification.extras.getString(Notification.EXTRA_TEXT)
+            val extras = notification.extras
+            val title = extras.getString(Notification.EXTRA_TITLE).orEmpty()
 
-            if (tcpClient.connect("192.168.1.11", 8080)) {
-                // Отправляем данные на ПК
-                tcpClient.sendMessage("$title:\n$text\n")
+            val text = extras.getCharSequence(Notification.EXTRA_BIG_TEXT)
+                ?: extras.getCharSequence(Notification.EXTRA_TEXT)
+                ?: extras.getCharSequenceArray(Notification.EXTRA_TEXT_LINES)?.joinToString("\n")
+                ?: ""
 
-                // Отключаемся
-                tcpClient.disconnect()
-            }
+            // Отправляем данные на ПК
+            tcpClient.sendMessage("$title:\n$text\n")
         }
     }
 
     override fun onDestroy() {
-        serviceJob.cancel()
         super.onDestroy()
+        runBlocking {
+            onListenerDisconnected()
+        }
+        serviceJob.cancel()
     }
 }
