@@ -8,6 +8,14 @@
 
 void server_run(int port)
 {
+	const int MIN_PORT = 1024;
+	const int MAX_PORT = 65535;
+
+	if (port < MIN_PORT || port > MAX_PORT) {
+		std::cout << "The port must be in the range from 1024 to 65535\n";
+		return;
+	}
+
 	sockaddr_in addr{};
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(port);
@@ -18,7 +26,7 @@ void server_run(int port)
 		perror("server socket");
 		return;
 	}
-	std::cout << "socket success\n";
+	//std::cout << "socket success\n";
 
 	if (bind(server_socket, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
 		perror("bind");
@@ -26,7 +34,7 @@ void server_run(int port)
 		return;
 	}
 
-	std::cout << "bind success\n";
+	//std::cout << "bind success\n";
 
 	if (listen(server_socket, 1) < 0) {
 		perror("listen");
@@ -34,7 +42,9 @@ void server_run(int port)
 		return;
 	}
 
-	std::cout << "listen success\n\n";
+	//std::cout << "listen success\n\n";
+	
+	std::cout << "Start on port " << port << std::endl;
 
 	while(1) {
 		int client = accept(server_socket, nullptr, nullptr);

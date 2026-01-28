@@ -3,6 +3,10 @@
 
 int main(int argc, char* argv[])
 {
-	server_run(8080);
+	if (argc < 2) {
+		std::cout << "Enter the port as the second argument\n";
+		return 0;
+	}
+	server_run(atoi(argv[1]));
 	return 0;
 }
