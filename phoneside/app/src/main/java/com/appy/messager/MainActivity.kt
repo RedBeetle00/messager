@@ -21,10 +21,10 @@ class MainActivity : ComponentActivity() {
             startActivity(intent)
         }
     }
-}
 
-fun isServiceEnabled(context: Context): Boolean {
-    val packageName = context.packageName
-    val enabledListeners = NotificationManagerCompat.getEnabledListenerPackages(context)
-    return enabledListeners.contains(packageName)
+    fun isServiceEnabled(context: Context): Boolean {
+        val packageName = context.packageName
+        val enabledListeners = NotificationManagerCompat.getEnabledListenerPackages(context)
+        return enabledListeners.contains(packageName)
+    }
 }
