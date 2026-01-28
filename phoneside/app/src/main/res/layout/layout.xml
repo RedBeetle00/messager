@@ -3,11 +3,56 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#222222"
     android:visibility="visible">
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="142dp" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Messager" />
+        android:layout_height="wrap_content"
+        android:textColor="#cccccc"
+        android:text="@string/ip_address" />
+
+    <EditText
+        android:id="@+id/editTextText2"
+        android:layout_width="match_parent"
+        android:textColorHint="#808080"
+        android:hint="Введите Ip адрес"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:importantForAutofill="no"
+        android:textColor="#cccccc"
+        android:inputType="text" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#cccccc"
+        android:text="@string/port" />
+
+    <EditText
+        android:id="@+id/editTextDate2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:importantForAutofill="no"
+        android:inputType="date"
+        android:textColorHint="#808080"
+        android:hint="Введите порт"
+        android:textColor="#cccccc"
+        android:text="@string/_8080" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#222222"
+        android:textColor="#cccccc"
+        android:text="@string/start" />
+
 </LinearLayout>

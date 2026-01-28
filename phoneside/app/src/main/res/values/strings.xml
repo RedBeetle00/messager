@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Messager</string>
+    <string name="start">Start</string>
+    <string name="ip_address">Ip address</string>
+    <string name="port">Port</string>
+    <string name="_8080">8080</string>
 </resources>
