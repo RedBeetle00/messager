@@ -3,7 +3,6 @@
 #include <iostream>
 #include <sys/socket.h>
 #include <arpa/inet.h>
-#include <unistd.h>
 #include <csignal>
 
 void server_run(int port)
