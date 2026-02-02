@@ -7,8 +7,6 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.launch
 
 class NotificationService : NotificationListenerService() {
-
-
     private lateinit var tcpClient: TcpClient
     private val serviceJob = Job()
     private val scope = CoroutineScope(Dispatchers.IO + serviceJob)
@@ -24,20 +22,13 @@ class NotificationService : NotificationListenerService() {
         tcpClient = TcpClient()
     }
 
-    companion object {
-        @Volatile
-        var enabled = false
-    }
-
     override fun onListenerConnected() {
-        enabled = true
         scope.launch {
             tcpClient.connect("192.168.1.11", 8080)
         }
     }
 
     override fun onListenerDisconnected() {
-        enabled = false
         scope.launch {
             tcpClient.disconnect()
         }

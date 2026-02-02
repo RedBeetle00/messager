@@ -7,7 +7,6 @@ import android.widget.Button
 import androidx.activity.ComponentActivity
 import androidx.core.app.NotificationManagerCompat
 
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,8 +24,6 @@ class MainActivity : ComponentActivity() {
                 return@setOnClickListener
             }
 
-            if (!NotificationService.enabled) {
-            }
             updateButtonText(button)
         }
     }
@@ -38,7 +35,7 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun updateButtonText(button: Button) {
-        button.text = if (NotificationService.enabled) "Stop" else "Start"
+        button.text = "Start"
     }
 
     override fun onDestroy() {
