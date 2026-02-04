@@ -18,7 +18,7 @@
         android:text="@string/ip_address" />
 
     <EditText
-        android:id="@+id/editTextText2"
+        android:id="@+id/host_text"
         android:layout_width="match_parent"
         android:textColorHint="#808080"
         android:hint="Введите Ip адрес"
@@ -36,7 +36,7 @@
         android:text="@string/port" />
 
     <EditText
-        android:id="@+id/editTextDate2"
+        android:id="@+id/port_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"

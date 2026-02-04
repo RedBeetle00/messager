@@ -22,18 +22,6 @@ class NotificationService : NotificationListenerService() {
         tcpClient = TcpClient()
     }
 
-    override fun onListenerConnected() {
-        scope.launch {
-            tcpClient.connect("192.168.1.11", 8080)
-        }
-    }
-
-    override fun onListenerDisconnected() {
-        scope.launch {
-            tcpClient.disconnect()
-        }
-    }
-
     // Как только приходит уведомление
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         if (systemPackages.contains(sbn.packageName)) {

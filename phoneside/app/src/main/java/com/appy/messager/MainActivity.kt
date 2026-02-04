@@ -4,10 +4,19 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.EditText
 import androidx.activity.ComponentActivity
 import androidx.core.app.NotificationManagerCompat
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    private lateinit var tcpClient: TcpClient
+    private val serviceJob = Job()
+    private val scope = CoroutineScope(Dispatchers.IO + serviceJob)
+    private val isEnable = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout)
@@ -17,13 +26,31 @@ class MainActivity : ComponentActivity() {
         updateButtonText(button)
 
         button.setOnClickListener {
-            if (!isServiceEnabled(this)) {
-                startActivity(
-                    Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
-                )
-                return@setOnClickListener
-            }
+            if (isEnable) {
+                if (!isServiceEnabled(this)) {
+                    startActivity(
+                        Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
+                    )
+                    return@setOnClickListener
+                }
 
+                // Получаем ввод для IP
+                val editTextHost = findViewById<EditText>(R.id.host_text)
+                val textHost = editTextHost.text.toString()
+
+                // Полчаем ввод для порта
+                val editTextPort = findViewById<EditText>(R.id.port_text)
+                val textPort = editTextPort.text.toString().toInt()
+
+                scope.launch {
+                    tcpClient.connect(textHost, textPort)
+                }
+            }
+            else {
+                scope.launch {
+                    tcpClient.disconnect()
+                }
+            }
             updateButtonText(button)
         }
     }
