@@ -4,12 +4,10 @@ import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.app.Notification
 import kotlinx.coroutines.*
-import kotlinx.coroutines.launch
 
 class NotificationService : NotificationListenerService() {
     private lateinit var tcpClient: TcpClient
-    private val serviceJob = Job()
-    val scope = CoroutineScope(Dispatchers.IO + serviceJob)
+    private lateinit var mainActivity: MainActivity
 
     // Список пакетов для игнорирования
     private val systemPackages = setOf(
@@ -20,6 +18,7 @@ class NotificationService : NotificationListenerService() {
     override fun onCreate() {
         super.onCreate()
         tcpClient = TcpClient()
+        mainActivity = MainActivity()
     }
 
     // Как только приходит уведомление
@@ -27,8 +26,7 @@ class NotificationService : NotificationListenerService() {
         if (systemPackages.contains(sbn.packageName)) {
             return // Пропускаем системные уведомления
         }
-        scope.launch {
-            // Получаем уведомление
+        // Получаем уведомление
             val notification = sbn.notification
 
             // Извлекаем данные
@@ -39,10 +37,7 @@ class NotificationService : NotificationListenerService() {
                 ?: extras.getCharSequence(Notification.EXTRA_TEXT)
                 ?: extras.getCharSequenceArray(Notification.EXTRA_TEXT_LINES)?.joinToString("\n")
                 ?: ""
-            println("Trying to send message")
-            // Отправляем данные на ПК
-            tcpClient.sendMessage("$title:\n$text\n")
-        }
+        mainActivity.mainMessageSend(text, title)
     }
 
     override fun onDestroy() {
@@ -50,6 +45,5 @@ class NotificationService : NotificationListenerService() {
         runBlocking {
             onListenerDisconnected()
         }
-        // serviceJob.cancel()
     }
 }

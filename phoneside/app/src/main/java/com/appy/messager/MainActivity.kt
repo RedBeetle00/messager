@@ -16,7 +16,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var tcpClient: TcpClient
     private val serviceJob = Job()
     val scope = CoroutineScope(Dispatchers.IO + serviceJob)
-    private val isEnable = false
+    var isEnable = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout)
@@ -28,6 +28,7 @@ class MainActivity : ComponentActivity() {
 
         button.setOnClickListener {
             if (!isEnable) {
+                isEnable = true
                 println(isEnable)
                 if (!isServiceEnabled(this)) {
                     startActivity(
@@ -50,13 +51,13 @@ class MainActivity : ComponentActivity() {
                 }
             }
             else {
+                isEnable = false
                 println(isEnable)
                 scope.launch {
-                    println("Diconnect scope is launch")
+                    println("Disconnect scope is launch")
                     tcpClient.disconnect()
                 }
             }
-            updateButtonText(button)
         }
     }
 
@@ -74,4 +75,12 @@ class MainActivity : ComponentActivity() {
         super.onDestroy()
         stopService(Intent(this, NotificationService::class.java))
         serviceJob.cancel()    }
+
+    fun mainMessageSend(text: CharSequence, title: String) {
+        scope.launch {
+            println("Trying to send message")
+            // Отправляем данные на ПК
+            tcpClient.sendMessage("$title:\n$text\n")
+        }
+    }
 }
