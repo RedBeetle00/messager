@@ -9,7 +9,7 @@ import kotlinx.coroutines.launch
 class NotificationService : NotificationListenerService() {
     private lateinit var tcpClient: TcpClient
     private val serviceJob = Job()
-    private val scope = CoroutineScope(Dispatchers.IO + serviceJob)
+    val scope = CoroutineScope(Dispatchers.IO + serviceJob)
 
     // Список пакетов для игнорирования
     private val systemPackages = setOf(
@@ -39,7 +39,7 @@ class NotificationService : NotificationListenerService() {
                 ?: extras.getCharSequence(Notification.EXTRA_TEXT)
                 ?: extras.getCharSequenceArray(Notification.EXTRA_TEXT_LINES)?.joinToString("\n")
                 ?: ""
-
+            println("Trying to send message")
             // Отправляем данные на ПК
             tcpClient.sendMessage("$title:\n$text\n")
         }
@@ -50,6 +50,6 @@ class NotificationService : NotificationListenerService() {
         runBlocking {
             onListenerDisconnected()
         }
-        serviceJob.cancel()
+        // serviceJob.cancel()
     }
 }

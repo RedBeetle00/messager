@@ -25,6 +25,7 @@ class TcpClient {
 
     // Отправка уведомления
     suspend fun sendMessage(message: String): Boolean = withContext(Dispatchers.IO) {
+        println("Message sending")
         try {
             val out = outputStream ?: return@withContext false
             out.write(message.toByteArray())
@@ -32,6 +33,7 @@ class TcpClient {
             println("Message send $message")
             true
         } catch (_: Exception) {
+            println("Send message does not work")
             false
         }
     }

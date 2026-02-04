@@ -15,18 +15,20 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
     private lateinit var tcpClient: TcpClient
     private val serviceJob = Job()
-    private val scope = CoroutineScope(Dispatchers.IO + serviceJob)
+    val scope = CoroutineScope(Dispatchers.IO + serviceJob)
     private val isEnable = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout)
+        tcpClient = TcpClient()
 
         val button = findViewById<Button>(R.id.btnToggleService)
 
         updateButtonText(button)
 
         button.setOnClickListener {
-            if (isEnable) {
+            if (!isEnable) {
+                println(isEnable)
                 if (!isServiceEnabled(this)) {
                     startActivity(
                         Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
@@ -43,11 +45,14 @@ class MainActivity : ComponentActivity() {
                 val textPort = editTextPort.text.toString().toInt()
 
                 scope.launch {
+                    println("Connect scope is launch")
                     tcpClient.connect(textHost, textPort)
                 }
             }
             else {
+                println(isEnable)
                 scope.launch {
+                    println("Diconnect scope is launch")
                     tcpClient.disconnect()
                 }
             }
@@ -68,5 +73,5 @@ class MainActivity : ComponentActivity() {
     override fun onDestroy() {
         super.onDestroy()
         stopService(Intent(this, NotificationService::class.java))
-    }
+        serviceJob.cancel()    }
 }
